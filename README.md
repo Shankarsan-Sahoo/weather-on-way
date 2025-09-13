@@ -2,6 +2,10 @@
 
 A beautiful and intuitive web application that provides weather forecasts along your travel route. Plan your journey with confidence by knowing the weather conditions at every major stop along your way.
 
+## 🎥 Demo Video
+[Watch the Demo](https://youtu.be/T-PQUaQ-b40)
+
+
 ![Demo](https://github.com/Shankarsan-Sahoo/weather-on-way/blob/main/screenshots/features/Screenshot%202025-09-13%20175646.png)
 
 ## ✨ Features

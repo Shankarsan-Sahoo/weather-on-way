@@ -1,0 +1,518 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather On Way</title>
+    <!-- Modern CSS Framework - Tailwind with custom config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'slide-down': 'slideDown 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideDown: {
+                            '0%': { transform: 'translateY(-20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Animation Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background-attachment: fixed;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .pac-container {
+            z-index: 1051 !important;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        
+        .input-animated:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-animated {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-animated:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn-animated:hover:after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        .weather-card {
+            transition: all 0.3s ease;
+        }
+        
+        .weather-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .loading-animation {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        /* Responsive Design Elements */
+        @media (max-width: 1024px) {
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .glass-effect {
+                padding: 1.5rem !important;
+            }
+            .weather-card {
+                margin-bottom: 1rem;
+            }
+            .nav {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .hero-content h2 {
+                font-size: 1.75rem;
+            }
+            .hero-content p {
+                font-size: 0.875rem;
+            }
+            .weather-forecast {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .weather-icon {
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            transition: right 0.3s ease-in-out;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 to-primary-200 p-0 m-0">
+    <!-- Premium Header with Navigation -->
+    <header class="w-full bg-white bg-opacity-90 backdrop-blur-sm shadow-md fixed top-0 z-50 animate-slide-down">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <div class="text-primary-600 animate-bounce-slow">
+                        <i class="fas fa-cloud-sun text-3xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-primary-700 tracking-tight">Weather<span class="text-primary-500">OnWay</span></h1>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" class="text-secondary-600 hover:text-primary-600 font-medium transition-colors duration-300 ease-in-out">Home</a>
+                    <a href="#" class="text-secondary-600 hover:text-primary-600 font-medium transition-colors duration-300 ease-in-out">About</a>
+                    <a href="#" class="text-secondary-600 hover:text-primary-600 font-medium transition-colors duration-300 ease-in-out">Features</a>
+                    <a href="#" class="text-secondary-600 hover:text-primary-600 font-medium transition-colors duration-300 ease-in-out">Contact</a>
+                </nav>
+                <div class="md:hidden">
+                    <button type="button" id="mobileMenuBtn" class="text-secondary-500 hover:text-primary-600 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="absolute top-4 right-4 text-primary-700 focus:outline-none" id="closeMenuBtn">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        <div class="flex flex-col space-y-6 mt-16">
+            <a href="#" class="text-primary-700 hover:text-primary-500 font-medium text-lg transition-colors duration-200 border-b border-gray-200 pb-2">Home</a>
+            <a href="#" class="text-primary-700 hover:text-primary-500 font-medium text-lg transition-colors duration-200 border-b border-gray-200 pb-2">About</a>
+            <a href="#" class="text-primary-700 hover:text-primary-500 font-medium text-lg transition-colors duration-200 border-b border-gray-200 pb-2">Features</a>
+            <a href="#" class="text-primary-700 hover:text-primary-500 font-medium text-lg transition-colors duration-200 border-b border-gray-200 pb-2">Contact</a>
+        </div>
+    </div>
+
+    <!-- Main Content with Padding for Fixed Header -->
+    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <!-- Hero Section -->
+        <div class="glass-effect rounded-2xl p-8 mb-12 animate-fade-in shadow-xl">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary-800 mb-4">Plan Your Journey with Weather Insights</h2>
+                <p class="text-secondary-600 max-w-3xl mx-auto">Get accurate weather forecasts for every stop along your route. Travel with confidence knowing what weather to expect.</p>
+            </div>
+        
+        <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-slide-up" id="routeForm">
+                {% csrf_token %}
+                <div class="md:col-span-2 lg:col-span-1 group">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-primary-400 group-focus-within:text-primary-600 transition-colors duration-200">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <input type="text" id="origin" name="origin" 
+                               class="w-full pl-10 pr-4 py-3 border-2 border-secondary-200 rounded-lg focus:ring-primary-500 focus:border-primary-500 input-animated bg-white bg-opacity-90 shadow-sm" 
+                               placeholder="Enter starting point" required>
+                        <label for="origin" class="absolute -top-6 left-0 text-sm font-medium text-primary-700 transition-all duration-200">
+                            <i class="fas fa-plane-departure mr-1 text-primary-500"></i> Origin
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="md:col-span-2 lg:col-span-1 group">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-primary-400 group-focus-within:text-primary-600 transition-colors duration-200">
+                            <i class="fas fa-map-pin"></i>
+                        </div>
+                        <input type="text" id="destination" name="destination" 
+                               class="w-full pl-10 pr-4 py-3 border-2 border-secondary-200 rounded-lg focus:ring-primary-500 focus:border-primary-500 input-animated bg-white bg-opacity-90 shadow-sm" 
+                               placeholder="Enter destination" required>
+                        <label for="destination" class="absolute -top-6 left-0 text-sm font-medium text-primary-700 transition-all duration-200">
+                            <i class="fas fa-plane-arrival mr-1 text-primary-500"></i> Destination
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="md:col-span-2 group">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-primary-400 group-focus-within:text-primary-600 transition-colors duration-200">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <input type="datetime-local" id="departure_time" name="departure_time" 
+                               class="w-full pl-10 pr-4 py-3 border-2 border-secondary-200 rounded-lg focus:ring-primary-500 focus:border-primary-500 input-animated bg-white bg-opacity-90 shadow-sm" required>
+                        <label for="departure_time" class="absolute -top-6 left-0 text-sm font-medium text-primary-700 transition-all duration-200">
+                            <i class="fas fa-calendar-alt mr-1 text-primary-500"></i> Departure Time
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="md:col-span-2 flex justify-center mt-4">
+                    <button type="submit" id="submitBtn" class="btn-animated bg-gradient-to-r from-primary-500 to-primary-700 text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl hover:from-primary-600 hover:to-primary-800 transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-2">
+                        <i class="fas fa-cloud-sun mr-2"></i>
+                        <span>Get Weather Forecast</span>
+                    </button>
+                </div>
+                
+                <div id="loadingIndicator" class="hidden md:col-span-2 mt-6 text-center">
+                    <div class="flex flex-col items-center justify-center p-4 bg-white bg-opacity-80 rounded-lg shadow-md">
+                        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_t9gkkhz4.json" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></lottie-player>
+                        <p class="mt-3 text-primary-700 font-medium">Calculating weather along your route...</p>
+                        <p class="text-sm text-secondary-500">This may take a moment while we gather accurate forecasts.</p>
+                    </div>
+                </div>
+            </form>
+        
+        <div id="map" class="mt-4 h-64 rounded-lg hidden"></div>
+        
+        {% if route_data %}
+        <div class="mt-12 animate-fade-in glass-effect p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-6 text-center text-primary-800 relative inline-block">
+                <span class="relative z-10">Weather Along Your Route</span>
+                <span class="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-primary-300 to-secondary-300 rounded opacity-70"></span>
+            </h2>
+            <div class="mb-5 bg-white bg-opacity-80 p-4 rounded-lg shadow-sm">
+                <p class="text-lg flex items-center">
+                    <i class="fas fa-route text-primary-600 mr-2"></i>
+                    <span class="font-medium">Route:</span> 
+                    <span class="ml-2">{{ route_data.origin }} 
+                        <i class="fas fa-arrow-right text-primary-500 mx-2"></i> 
+                        {{ route_data.destination }} 
+                        <span class="ml-2 px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-sm font-medium">{{ route_data.total_distance|floatformat:1 }} km</span>
+                    </span>
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                {% for point in route_data.points %}
+                <div class="weather-card bg-white bg-opacity-80 backdrop-filter backdrop-blur-sm rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 animate-slide-up" style="animation-delay: {{ forloop.counter|add:"1" }}00ms;">
+                    <div class="bg-gradient-to-r from-primary-500 to-primary-700 px-4 py-3 text-white">
+                        <h3 class="font-bold flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span class="truncate">{{ point.place }}</span>
+                        </h3>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center">
+                                <div class="text-primary-700 mr-3">
+                                    <i class="fas fa-road text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Distance</p>
+                                    <p class="font-semibold">{{ point.distance|floatformat:1 }} km</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="text-primary-700 mr-3">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">ETA</p>
+                                    <p class="font-semibold">{{ point.eta }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="weather-forecast flex items-center p-3 bg-gray-50 rounded-lg">
+                            <div class="weather-icon mr-4">
+                                {% if 'rain' in point.forecast.description|lower %}
+                                    <i class="fas fa-cloud-rain text-3xl text-blue-500 animate-bounce-slow"></i>
+                                {% elif 'cloud' in point.forecast.description|lower %}
+                                    <i class="fas fa-cloud text-3xl text-gray-500 animate-pulse"></i>
+                                {% elif 'clear' in point.forecast.description|lower or 'sun' in point.forecast.description|lower %}
+                                    <i class="fas fa-sun text-3xl text-yellow-500"></i>
+                                {% elif 'snow' in point.forecast.description|lower %}
+                                    <i class="fas fa-snowflake text-3xl text-blue-300 animate-pulse"></i>
+                                {% elif 'storm' in point.forecast.description|lower or 'thunder' in point.forecast.description|lower %}
+                                    <i class="fas fa-bolt text-3xl text-yellow-600 animate-pulse"></i>
+                                {% elif 'fog' in point.forecast.description|lower or 'mist' in point.forecast.description|lower %}
+                                    <i class="fas fa-smog text-3xl text-gray-400 animate-pulse"></i>
+                                {% else %}
+                                    <i class="fas fa-cloud-sun text-3xl text-gray-600"></i>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">{{ point.forecast.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if error %}
+        <div class="mt-6 p-4 bg-red-50 text-red-700 rounded-lg">
+            <p class="font-medium">Error:</p>
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function initAutocomplete() {
+            const options = {
+                types: ['(cities)'],
+                componentRestrictions: { country: 'in' }
+            };
+
+            // Initialize origin autocomplete
+            const originInput = document.getElementById('origin');
+            const originAutocomplete = new google.maps.places.Autocomplete(originInput, options);
+            originAutocomplete.addListener('place_changed', function() {
+                const place = originAutocomplete.getPlace();
+                if (!place.geometry) {
+                    window.alert("No details available for: '" + place.name + "'");
+                }
+            });
+
+            // Initialize destination autocomplete
+            const destinationInput = document.getElementById('destination');
+            const destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput, options);
+            destinationAutocomplete.addListener('place_changed', function() {
+                const place = destinationAutocomplete.getPlace();
+                if (!place.geometry) {
+                    window.alert("No details available for: '" + place.name + "'");
+                }
+            });
+
+            // Prevent form submission on Enter key in autocomplete fields
+            [originInput, destinationInput].forEach(input => {
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+
+        // Set default departure time and handle form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('departure_time').value = now.toISOString().slice(0, 16);
+            
+            // Show loading indicator on form submission
+            document.getElementById('routeForm').addEventListener('submit', function() {
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('loadingIndicator').classList.remove('hidden');
+            });
+            
+            // Hide loading indicator if results are already displayed
+            {% if route_data or error %}
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('loadingIndicator').classList.add('hidden');
+            {% endif %}
+            
+            // Mobile Menu Functionality
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const closeMenuBtn = document.getElementById('closeMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && closeMenuBtn && mobileMenu) {
+                // Open mobile menu
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+                });
+                
+                // Close mobile menu
+                closeMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = ''; // Restore scrolling
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (mobileMenu.classList.contains('active') && 
+                        !mobileMenu.contains(event.target) && 
+                        event.target !== mobileMenuBtn) {
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+            
+            // Add animation delay to staggered elements
+            const animatedElements = document.querySelectorAll('.animate-slide-up, .animate-fade-in');
+            animatedElements.forEach((el, index) => {
+                if (!el.style.animationDelay) {
+                    el.style.animationDelay = `${index * 0.1}s`;
+                }
+            });
+        });
+    </script>
+
+    <!-- Load Google Maps JavaScript API -->
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_CONFIG.API_KEY }}&libraries=places&callback=initAutocomplete&loading=async">
+    </script>
+</body>
+</html>

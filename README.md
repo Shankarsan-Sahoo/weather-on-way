@@ -72,13 +72,13 @@ Visit `http://127.0.0.1:8000/` in your browser.
 ## 📱 Screenshots
 
 ### Home Page
-![Home Page](screenshots/home.png)
+![Home Page](https://github.com/Shankarsan-Sahoo/weather-on-way/blob/main/screenshots/desktop/Screenshot%202025-09-13%20175534.png)
 
 ### Route Weather
-![Route Weather](screenshots/route.png)
+![Route Weather](https://github.com/Shankarsan-Sahoo/weather-on-way/blob/main/screenshots/features/Screenshot%202025-09-13%20175645.png)
 
 ### Mobile View
-![Mobile View](screenshots/mobile.png)
+![Mobile View](https://github.com/Shankarsan-Sahoo/weather-on-way/blob/main/screenshots/mobile/Screenshot_20250913_181013.jpg)
 
 ## 🔮 Upcoming Features
 

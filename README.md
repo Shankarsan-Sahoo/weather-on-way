@@ -2,7 +2,7 @@
 
 A beautiful and intuitive web application that provides weather forecasts along your travel route. Plan your journey with confidence by knowing the weather conditions at every major stop along your way.
 
-![Weather On Way Demo](demo-screenshot.png)
+![Demo](screenshots/desktop/Screenshot 2025-09-13 175534.png)
 
 ## ✨ Features
 

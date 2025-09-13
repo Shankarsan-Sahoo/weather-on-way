@@ -7,8 +7,8 @@ A beautiful and intuitive web application that provides weather forecasts along 
 
 
 ## 📸 Demo Screenshot
+<img src="https://github.com/Shankarsan-Sahoo/weather-on-way/blob/main/screenshots/features/Screenshot%202025-09-13%20175646.png" alt="Demo" width="100%" height="500" />
 
-<img src="https://github.com/Shankarsan-Sahoo/weather-on-way/blob/main/screenshots/features/Screenshot%202025-09-13%20175646.png" alt="Demo" width="500" height="300"  />
 
 
 ## ✨ Features

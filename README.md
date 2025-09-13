@@ -85,7 +85,7 @@ Visit `http://127.0.0.1:8000/` in your browser.
 ![Route Weather](https://github.com/Shankarsan-Sahoo/weather-on-way/blob/main/screenshots/features/Screenshot%202025-09-13%20175645.png)
 
 ### Mobile View
-<img src="https://github.com/Shankarsan-Sahoo/weather-on-way/blob/main/screenshots/mobile/Screenshot_20250913_181013.jpg" alt="Mobile View" width="100%" height="500" />
+<img src="https://github.com/Shankarsan-Sahoo/weather-on-way/blob/main/screenshots/mobile/Screenshot_20250913_181013.jpg" alt="Mobile View" width="50%" height="500" />
 
 
 ## 🔮 Upcoming Features

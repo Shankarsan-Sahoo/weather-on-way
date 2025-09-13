@@ -82,7 +82,6 @@ Visit `http://127.0.0.1:8000/` in your browser.
 
 ## 🔮 Upcoming Features
 
-- [ ] Real-time weather updates
 - [ ] Alternative route suggestions
 - [ ] Weather alerts along route
 - [ ] Journey sharing

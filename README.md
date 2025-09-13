@@ -115,8 +115,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 
 
-Project Link: [https://github.com/your-username/weather-on-way](https://github.com/your-username/weather-on-way)
+Project Link: [https://github.com/Shankarsan-Sahoo/weather-on-way](https://github.com/Shankarsan-Sahoo/weather-on-way)
 
 ---
 
-Made with ❤️ by [Shankarsan Sahoo](https://github.com/your-username)
+Made with ❤️ by [Shankarsan Sahoo](https://github.com/Shankarsan-Sahoo)

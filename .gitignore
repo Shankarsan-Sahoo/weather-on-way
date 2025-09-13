@@ -8,3 +8,12 @@ db.sqlite3
 *.log
 local_settings.py
 media/
+
+# Allow image files in assets and screenshots
+!assets/
+!assets/*.png
+!assets/*.jpg
+!screenshots/
+!screenshots/**/
+!screenshots/**/*.png
+!screenshots/**/*.jpg
